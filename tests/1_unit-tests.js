@@ -208,4 +208,77 @@ suite('Unit Tests', () => {
       assert.isFalse(result);
     });
   });
+
+  suite('SudokuSolver.solve Tests', () => {
+    test('SudokuSolver.solve returns a solved sudoku for valid puzzle strings', () => {
+      const puzzleStr =
+        '..9..5.1.85.4....2432......1...69.83.9.....6.62.71...9......1945....4.37.4.3..6..';
+      let result;
+
+      result = solver.solve(puzzleStr);
+      assert.isString(result);
+      assert.equal(result.length, 81);
+      assert.isTrue(/[1-9]{81}/.test(result));
+
+      // Solving a completely empty grid (multiple possible solutions)
+      result = solver.solve('.'.repeat(81));
+      assert.isString(result);
+      assert.equal(result.length, 81);
+      assert.isTrue(/[1-9]{81}/.test(result));
+
+      // Test puzzle strings with known solutions:
+      for (const [puzzleStr, solution] of puzzlesAndSolutions) {
+        result = solver.solve(puzzleStr);
+        assert.isString(result);
+        assert.equal(result.length, 81);
+        assert.isTrue(/[1-9]{81}/.test(result));
+      }
+    });
+
+    test('SudokuSolver.solve returns false for non solvable puzzle strings', () => {
+      let invalidPuzzleStr =
+        '2.9..5.1.85.4....2432......1...69.83.9.....6.62.71...9......1945....4.37.4.3..6..';
+      let result;
+
+      result = solver.solve(invalidPuzzleStr);
+      assert.isFalse(result);
+
+      // Not solvable as 4 cannot be placed anywhere in the first region
+      invalidPuzzleStr =
+        '123..........4....789....4.......................................................';
+
+      result = solver.solve(invalidPuzzleStr);
+      assert.isFalse(result);
+
+      // Not solvable as 7 cannot be placed anywhere in bottom left region
+      invalidPuzzleStr =
+        '123...............789...........4....6.....53..8...1...12...........7.........297';
+
+      result = solver.solve(invalidPuzzleStr);
+      assert.isFalse(result);
+    });
+
+    test('SudokuSolver.solve returns correct solutions for solvable puzzles', () => {
+      const puzzleStr =
+        '..9..5.1.85.4....2432......1...69.83.9.....6.62.71...9......1945....4.37.4.3..6..';
+      const solution =
+        '769235418851496372432178956174569283395842761628713549283657194516924837947381625';
+      let result;
+
+      result = solver.solve(puzzleStr);
+      assert.isString(result);
+      assert.equal(result.length, 81);
+      assert.isTrue(/[1-9]{81}/.test(result));
+      assert.equal(result, solution);
+
+      // Test puzzle strings with known solutions:
+      for (const [puzzleStr, solution] of puzzlesAndSolutions) {
+        result = solver.solve(puzzleStr);
+        assert.isString(result);
+        assert.equal(result.length, 81);
+        assert.isTrue(/[1-9]{81}/.test(result));
+        assert.equal(result, solution);
+      }
+    });
+  });
 });
