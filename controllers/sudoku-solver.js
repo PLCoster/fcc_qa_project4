@@ -71,7 +71,38 @@ class SudokuSolver {
     return true;
   }
 
-  checkRegionPlacement(puzzleString, row, column, value) {}
+  // Checks if the given placement is valid for regions in the current board
+  checkRegionPlacement(puzzleString, row, column, value) {
+    const positionIndex = row * 9 + column;
+
+    const regionStartRow = Math.floor(row / 3) * 3;
+    const regionStartCol = Math.floor(column / 3) * 3;
+
+    for (
+      let checkRow = regionStartRow;
+      checkRow < regionStartRow + 3;
+      checkRow += 1
+    ) {
+      for (
+        let checkCol = regionStartCol;
+        checkCol < regionStartCol + 3;
+        checkCol += 1
+      ) {
+        const checkPosition = checkRow * 9 + checkCol;
+
+        if (
+          checkPosition === positionIndex ||
+          puzzleString[checkPosition] === '.'
+        ) {
+          continue;
+        } else if (puzzleString[checkPosition] === value) {
+          return false;
+        }
+      }
+    }
+
+    return true;
+  }
 
   solve(puzzleString) {}
 }

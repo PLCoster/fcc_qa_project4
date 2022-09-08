@@ -169,4 +169,43 @@ suite('Unit Tests', () => {
       assert.isFalse(result);
     });
   });
+
+  suite('SudokuSolver.checkRegionPlacement Tests', () => {
+    test('SudokuSolver.checkRegionPlacement returns true for valid region placements', () => {
+      const puzzleStr =
+        '..9..5.1.85.4....2432......1...69.83.9.....6.62.71...9......1945....4.37.4.3..6..';
+      let result;
+
+      result = solver.checkRegionPlacement(puzzleStr, 0, 0, '7');
+      assert.isTrue(result);
+
+      result = solver.checkRegionPlacement(puzzleStr, 4, 4, '4');
+      assert.isTrue(result);
+
+      result = solver.checkRegionPlacement(puzzleStr, 7, 6, '8');
+
+      // Test replacing existing value with valid value
+      result = solver.checkRegionPlacement(puzzleStr, 5, 8, '5');
+      assert.isTrue(result);
+    });
+
+    test('SudokuSolver.checkRegionPlacement returns false for invalid region placements', () => {
+      const puzzleStr =
+        '..9..5.1.85.4....2432......1...69.83.9.....6.62.71...9......1945....4.37.4.3..6..';
+      let result;
+
+      result = solver.checkRegionPlacement(puzzleStr, 0, 0, '2');
+      assert.isFalse(result);
+
+      result = solver.checkRegionPlacement(puzzleStr, 2, 5, '5');
+      assert.isFalse(result);
+
+      result = solver.checkRegionPlacement(puzzleStr, 8, 7, '7');
+      assert.isFalse(result);
+
+      // Test replacing existing value with invalid value
+      result = solver.checkRegionPlacement(puzzleStr, 7, 5, '3');
+      assert.isFalse(result);
+    });
+  });
 });
