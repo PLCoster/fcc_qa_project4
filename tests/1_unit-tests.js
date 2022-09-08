@@ -90,4 +90,36 @@ suite('Unit Tests', () => {
       );
     });
   });
+
+  suite('SudokuSolver.checkRowPlacement Tests', () => {
+    test('SudokuSolver.checkRowPlacement returns true for valid row placements', () => {
+      const puzzleStr =
+        '..9..5.1.85.4....2432......1...69.83.9.....6.62.71...9......1945....4.37.4.3..6..';
+      let result;
+
+      result = solver.checkRowPlacement(puzzleStr, 0, 0, '7');
+      assert.isTrue(result);
+
+      result = solver.checkRowPlacement(puzzleStr, 4, 4, '4');
+      assert.isTrue(result);
+
+      result = solver.checkRowPlacement(puzzleStr, 7, 6, '8');
+      assert.isTrue(result);
+    });
+
+    test('SudokuSolver.checkRowPlacement returns false for invalid row placements', () => {
+      const puzzleStr =
+        '..9..5.1.85.4....2432......1...69.83.9.....6.62.71...9......1945....4.37.4.3..6..';
+      let result;
+
+      result = solver.checkRowPlacement(puzzleStr, 0, 8, '5');
+      assert.isFalse(result);
+
+      result = solver.checkRowPlacement(puzzleStr, 7, 4, '7');
+      assert.isFalse(result);
+
+      result = solver.checkRowPlacement(puzzleStr, 3, 6, '6');
+      assert.isFalse(result);
+    });
+  });
 });

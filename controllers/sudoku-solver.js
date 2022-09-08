@@ -1,3 +1,15 @@
+const rowCharToIndex = {
+  A: 0,
+  B: 1,
+  C: 2,
+  D: 3,
+  E: 4,
+  F: 5,
+  G: 6,
+  H: 7,
+  I: 8,
+};
+
 class SudokuSolver {
   // Determines if a given puzzleString is valid i.e.:
   // contains 81 characters from 1-9 or '.'
@@ -17,7 +29,25 @@ class SudokuSolver {
     return [true, {}];
   }
 
-  checkRowPlacement(puzzleString, row, column, value) {}
+  // Checks if the given placement is valid in the current board
+  checkRowPlacement(puzzleString, row, column, value) {
+    const positionIndex = row * 9 + column - 1;
+
+    // Check all row entries apart from the given position:
+    for (let i = 0; i < 9; i += 1) {
+      const checkPosition = row * 9 + i;
+      if (
+        checkPosition === positionIndex ||
+        puzzleString[checkPosition] === '.'
+      ) {
+        continue;
+      } else if (puzzleString[checkPosition] === value) {
+        return false;
+      }
+    }
+
+    return true;
+  }
 
   checkColPlacement(puzzleString, row, column, value) {}
 
