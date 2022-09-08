@@ -29,13 +29,14 @@ class SudokuSolver {
     return [true, {}];
   }
 
-  // Checks if the given placement is valid in the current board
+  // Checks if the given placement is valid for rows in the current board
   checkRowPlacement(puzzleString, row, column, value) {
-    const positionIndex = row * 9 + column - 1;
+    const positionIndex = row * 9 + column;
 
     // Check all row entries apart from the given position:
-    for (let i = 0; i < 9; i += 1) {
-      const checkPosition = row * 9 + i;
+    for (let checkCol = 0; checkCol < 9; checkCol += 1) {
+      const checkPosition = row * 9 + checkCol;
+
       if (
         checkPosition === positionIndex ||
         puzzleString[checkPosition] === '.'
@@ -49,7 +50,26 @@ class SudokuSolver {
     return true;
   }
 
-  checkColPlacement(puzzleString, row, column, value) {}
+  // Checks if the given placement is valid for columns in the current board
+  checkColPlacement(puzzleString, row, column, value) {
+    const positionIndex = row * 9 + column;
+
+    // Check all column entries apart from the given position:
+    for (let checkRow = 0; checkRow < 9; checkRow += 1) {
+      const checkPosition = checkRow * 9 + column;
+
+      if (
+        checkPosition === positionIndex ||
+        puzzleString[checkPosition] === '.'
+      ) {
+        continue;
+      } else if (puzzleString[checkPosition] === value) {
+        return false;
+      }
+    }
+
+    return true;
+  }
 
   checkRegionPlacement(puzzleString, row, column, value) {}
 

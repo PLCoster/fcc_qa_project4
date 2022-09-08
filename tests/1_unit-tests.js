@@ -105,6 +105,10 @@ suite('Unit Tests', () => {
 
       result = solver.checkRowPlacement(puzzleStr, 7, 6, '8');
       assert.isTrue(result);
+
+      // Test replacing existing value with valid value
+      result = solver.checkRowPlacement(puzzleStr, 5, 8, '3');
+      assert.isTrue(result);
     });
 
     test('SudokuSolver.checkRowPlacement returns false for invalid row placements', () => {
@@ -119,6 +123,49 @@ suite('Unit Tests', () => {
       assert.isFalse(result);
 
       result = solver.checkRowPlacement(puzzleStr, 3, 6, '6');
+      assert.isFalse(result);
+
+      // Test replacing existing value with invalid value
+      result = solver.checkRowPlacement(puzzleStr, 5, 8, '1');
+      assert.isFalse(result);
+    });
+  });
+
+  suite('SudokuSolver.checkColPlacement Tests', () => {
+    test('SudokuSolver.checkColPlacement returns true for valid column placements', () => {
+      const puzzleStr =
+        '..9..5.1.85.4....2432......1...69.83.9.....6.62.71...9......1945....4.37.4.3..6..';
+      let result;
+
+      result = solver.checkColPlacement(puzzleStr, 0, 0, '7');
+      assert.isTrue(result);
+
+      result = solver.checkColPlacement(puzzleStr, 4, 4, '4');
+      assert.isTrue(result);
+
+      result = solver.checkColPlacement(puzzleStr, 7, 6, '8');
+
+      // Test replacing existing value with valid value
+      result = solver.checkColPlacement(puzzleStr, 5, 8, '5');
+      assert.isTrue(result);
+    });
+
+    test('SudokuSolver.checkColPlacement returns false for invalid column placements', () => {
+      const puzzleStr =
+        '..9..5.1.85.4....2432......1...69.83.9.....6.62.71...9......1945....4.37.4.3..6..';
+      let result;
+
+      result = solver.checkColPlacement(puzzleStr, 2, 8, '2');
+      assert.isFalse(result);
+
+      result = solver.checkColPlacement(puzzleStr, 5, 5, '9');
+      assert.isFalse(result);
+
+      result = solver.checkColPlacement(puzzleStr, 8, 0, '5');
+      assert.isFalse(result);
+
+      // Test replacing existing value with invalid value
+      result = solver.checkColPlacement(puzzleStr, 5, 8, '7');
       assert.isFalse(result);
     });
   });
