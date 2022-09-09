@@ -256,12 +256,21 @@ suite('Unit Tests', () => {
 
       result = solver.solve(invalidPuzzleStr);
       assert.isFalse(result);
+
+      // Completed but invalid puzzleStr should return false
+      puzzleStr =
+        '887549163531672894649831527496157382218396475753284916962415738185763249374928651';
+
+      result = solver.solve(puzzleStr);
+      assert.isFalse(result);
     });
 
     test('SudokuSolver.solve returns correct solutions for solvable puzzles', () => {
-      const puzzleStr =
+      let puzzleStr, solution;
+      // Normal Solvable Puzzle
+      puzzleStr =
         '..9..5.1.85.4....2432......1...69.83.9.....6.62.71...9......1945....4.37.4.3..6..';
-      const solution =
+      solution =
         '769235418851496372432178956174569283395842761628713549283657194516924837947381625';
       let result;
 
@@ -271,7 +280,18 @@ suite('Unit Tests', () => {
       assert.isTrue(/[1-9]{81}/.test(result));
       assert.equal(result, solution);
 
-      // Test puzzle strings with known solutions:
+      // Already Solved Puzzle should just return itself
+      puzzleStr =
+        '827549163531672894649831527496157382218396475753284916962415738185763249374928651';
+      solution = puzzleStr;
+
+      result = solver.solve(puzzleStr);
+      assert.isString(result);
+      assert.equal(result.length, 81);
+      assert.isTrue(/[1-9]{81}/.test(result));
+      assert.equal(result, solution);
+
+      // Test incomplete puzzle strings with known solutions:
       for (const [puzzleStr, solution] of puzzlesAndSolutions) {
         result = solver.solve(puzzleStr);
         assert.isString(result);
