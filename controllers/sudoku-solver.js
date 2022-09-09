@@ -1,3 +1,5 @@
+const puzzlesAndSolutions = require('./puzzle-strings');
+
 const rowCharToIndex = {
   A: 0,
   B: 1,
@@ -29,6 +31,26 @@ class SudokuSolver {
     }
 
     return [true, {}];
+  }
+
+  // Returns true if all values in puzzleString are valid
+  // Otherwise returns false
+  validTileValues(puzzleString) {
+    for (let index = 0; index < 81; index += 1) {
+      const row = Math.floor(index / 9);
+      const col = index % 9;
+      const args = [puzzleString, row, col, puzzleString[index]];
+      if (
+        !(
+          this.checkRowPlacement(...args) &&
+          this.checkColPlacement(...args) &&
+          this.checkRegionPlacement(...args)
+        )
+      ) {
+        return false;
+      }
+    }
+    return true;
   }
 
   // Checks if the given placement is valid for rows in the current board
@@ -106,17 +128,13 @@ class SudokuSolver {
     return true;
   }
 
-  // Checks a placement is valid along rows, columns and regions
-  checkAll(puzzleString, row, column, value) {
-    return (
-      this.checkRowPlacement(puzzleString, row, column, value) &&
-      this.checkColPlacement(puzzleString, row, column, value) &&
-      this.checkRegionPlacement(puzzleString, row, column, value)
-    );
-  }
-
   // Public solve function that creates puzzle array and the solves
   solve(puzzleString) {
+    // First check puzzleString is initially valid
+    if (!this.validTileValues(puzzleString)) {
+      return false; // Not a valid puzzleString to start from
+    }
+
     const puzzleArray = puzzleString.split('');
     const remainingMoves = this.getRemainingMoves(puzzleArray);
 
@@ -131,14 +149,9 @@ class SudokuSolver {
   // Attempts to solve the given sudoku using brute-force backtracking search
   // Optimises by placing values in the tile with fewest options remaining
   solvePuzzle(puzzleArray, remainingMoves) {
-    // If no moves remain, check sudoku is solved
+    // If no tile remain to be filled, sudoku has been solved
     if (Object.keys(remainingMoves).length === 0) {
-      if (this.sudokuIsSolved(puzzleArray.join(''))) {
-        return puzzleArray.join('');
-      }
-
-      // Otherwise we are unable to solve puzzle from this state
-      return false;
+      return puzzleArray.join('');
     }
 
     // Otherwise try backtracking search on first empty space
@@ -172,15 +185,6 @@ class SudokuSolver {
     // Reset most recent move and backtrack to previous move
     puzzleArray[nextMoveIndex] = '.';
 
-    return false;
-  }
-
-  // Returns true if the puzzle is solved, otherwise false
-  // Assumes that only valid moves have been placed on the sudoku
-  sudokuIsSolved(puzzleString) {
-    if (/[1-9]{81}/.test(puzzleString)) {
-      return true;
-    }
     return false;
   }
 
@@ -229,7 +233,7 @@ class SudokuSolver {
   }
 
   // Function that creates a new remainingMoves object, applying
-  // the given move
+  // the given move to the puzzle and removing the move as valid from same row/col/region tiles
   updateRemainingMoves(nextMoveIndex, value, remainingMoves) {
     const newRemainingMoves = {};
 
@@ -280,5 +284,12 @@ class SudokuSolver {
     return emptyTilePositions[0][1].size === 0;
   }
 }
+
+// const solver = new SudokuSolver();
+// console.log(
+//   solver.solve(
+//     '..9..5.1.85.4....2432......1...69.83.9.....6.62.71...9......1945....4.37.4.3..6..',
+//   ),
+// );
 
 module.exports = SudokuSolver;
