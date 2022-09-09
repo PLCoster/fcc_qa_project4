@@ -53,6 +53,33 @@ class SudokuSolver {
     return true;
   }
 
+  // Uses Row, Col and Region placement checks to return whether a placement is valid or has conflicts:
+  checkPlacement(puzzleString, coordinate, value) {
+    const row = rowCharToIndex[coordinate[0]];
+    const col = coordinate[1] - 1;
+
+    const result = { valid: true };
+
+    if (!this.checkRowPlacement(puzzleString, row, col, value)) {
+      result.conflict = ['row'];
+      result.valid = false;
+    }
+
+    if (!this.checkColPlacement(puzzleString, row, col, value)) {
+      result.conflict = result.conflict || [];
+      result.conflict.push('column');
+      result.valid = false;
+    }
+
+    if (!this.checkRegionPlacement(puzzleString, row, col, value)) {
+      result.conflict = result.conflict || [];
+      result.conflict.push('region');
+      result.valid = false;
+    }
+
+    return result;
+  }
+
   // Checks if the given placement is valid for rows in the current board
   checkRowPlacement(puzzleString, row, column, value) {
     const positionIndex = row * 9 + column;
@@ -284,12 +311,5 @@ class SudokuSolver {
     return emptyTilePositions[0][1].size === 0;
   }
 }
-
-// const solver = new SudokuSolver();
-// console.log(
-//   solver.solve(
-//     '..9..5.1.85.4....2432......1...69.83.9.....6.62.71...9......1945....4.37.4.3..6..',
-//   ),
-// );
 
 module.exports = SudokuSolver;
