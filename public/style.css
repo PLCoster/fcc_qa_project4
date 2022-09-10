@@ -1,35 +1,118 @@
-code {
-  background: #d0d0d5;
+/****** Main Styling ******/
+
+* {
+  box-sizing: border-box;
 }
 
-.container {
-  display: flex;
-  flex-direction: column;
+body {
+  font-family: 'Roboto', sans-serif;
+  font-size: 14px;
+  color: #222;
+  background-color: #fafafa;
+  line-height: 1.4em;
+  min-height: 100vh;
 }
 
-.form-container {
-  max-width: 95%;
-  align-self: flex-start;
+main {
+  padding: 40px 0;
 }
 
+main .logo {
+  max-height: 50px;
+  margin-right: 20px;
+}
+
+hr {
+  margin: 25px;
+}
+
+h3 {
+  margin-top: 30px;
+}
+
+h5 {
+  margin-top: 20px;
+}
+
+a {
+  color: #2574a9;
+}
+
+form {
+  margin: 0 10px 25px 10px;
+  padding: 15px;
+  color: #fff;
+  background-color: #333;
+  width: 260px;
+  height: 100%;
+  border-radius: 5px;
+}
+
+form h3 {
+  margin-top: 0;
+}
+
+input,
+select,
 textarea {
+  display: block;
+  margin-bottom: 10px;
   width: 100%;
 }
 
-#user-stories {
-  font-size: 1.2em;
+.btn-success {
+  width: 100%;
+  background-color: #25ae1b;
+  border: none;
 }
 
-#error-msg {
-  color: red;
-  display: inline;
-  margin-left: 10px;
+code {
+  font-family: monospace;
+  font-size: 1em;
+  padding: 2px;
+  color: black;
+  background-color: #fff;
+  max-width: 100%;
 }
+
+code.block {
+  display: block;
+  margin-bottom: 20px;
+  white-space: nowrap;
+  overflow-x: auto;
+}
+
+code ul.indent {
+  padding-left: 20px;
+  list-style-type: none;
+  margin-bottom: 0;
+}
+
+.footer {
+  margin-top: 40px;
+}
+
+/****** NavBar Styles ******/
+
+.navbar.navbar-dark {
+  background-color: #333;
+}
+
+.navbar .nav-link {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.navbar .nav-link:hover {
+  color: rgba(255, 255, 255, 1);
+}
+
+/****** Sudoku Container Styles ******/
 
 #sudoku-grid-container {
   display: flex;
   flex-direction: row;
-  margin-left: 20px;
+  --grid-cell-size: 3em;
+  padding: 0 var(--grid-cell-size) var(--grid-cell-size) 0;
 }
 
 #sudoku-grid {
@@ -43,62 +126,138 @@ textarea {
 }
 
 td {
+  padding: 0;
   border: 1px solid;
-  padding: 0.3em;
+  border-spacing: 0;
+  width: var(--grid-cell-size);
+  height: var(--grid-cell-size);
 }
 
 .yAxisLegend {
-  margin-top: 50px;
-  text-align: right;
+  margin-top: var(--grid-cell-size);
+  border-top: 3px solid rgba(0, 0, 0, 0);
+  border-bottom: 3px solid rgba(0, 0, 0, 0);
+  text-align: center;
   font-weight: bold;
 }
 
 .yAxisLegend tr td {
-  border: 1px solid rgba(0,0,0,0);
-  width: 2em;
-  height: 1.95em;
+  border: 1px solid rgba(0, 0, 0, 0);
+  width: var(--grid-cell-size);
+  height: var(--grid-cell-size);
 }
 
 .xAxisLegend {
-  border: 3px solid rgba(0,0,0,0);
+  border: none;
   border-spacing: 0;
   font-weight: bold;
 }
 
 .xAxisLegend tr td {
-  border: 1px solid rgba(0,0,0,0);
-  width: 2em;
-  height: 2em;
+  border: 1px solid rgba(0, 0, 0, 0);
+  width: var(--grid-cell-size);
+  height: 1em;
   text-align: center;
   vertical-align: bottom;
   padding-bottom: 0;
 }
 
 .xAxisLegend tr td:nth-of-type(3n) {
-  border-right: 3px solid rgba(0,0,0,0);
+  border-right: 3px solid rgba(0, 0, 0, 0);
 }
 
 .sudoku-input {
-  border: 1px solid black;
-  width: 2em;
-  height: 2em;
+  margin: 0;
+  padding: 0.3em;
+  display: inline;
+  width: 100%;
+  height: 100%;
+  border: none;
   text-align: center;
 }
 
-.C1, .C2, .C3, .C4, .C5, .C6, .C7, .C8, .C9, .F1, .F2, .F3, .F4, .F5, .F6, .F7, .F8, .F9 {
+.sudoku-input.error,
+#text-input.error {
+  color: red;
+}
+
+/** Remove number arrows from sudoku input grid **/
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button.sudoku-input,
+input::-webkit-inner-spin-button.sudoku-input {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type='number'].sudoku-input {
+  -moz-appearance: textfield;
+}
+
+td.C1,
+td.C2,
+td.C3,
+td.C4,
+td.C5,
+td.C6,
+td.C7,
+td.C8,
+td.C9,
+td.F1,
+td.F2,
+td.F3,
+td.F4,
+td.F5,
+td.F6,
+td.F7,
+td.F8,
+td.F9 {
   border-bottom: 3px solid;
 }
 
-.A3, .B3, .C3, .D3, .E3, .F3, .G3, .H3, .I3, .A6, .B6, .C6, .D6, .E6, .F6, .G6, .H6, .I6 {
+td.A3,
+td.B3,
+td.C3,
+td.D3,
+td.E3,
+td.F3,
+td.G3,
+td.H3,
+td.I3,
+td.A6,
+td.B6,
+td.C6,
+td.D6,
+td.E6,
+td.F6,
+td.G6,
+td.H6,
+td.I6 {
   border-right: 3px solid;
 }
 
-@media (min-width: 800px) {
-  .container {
-    flex-direction: row;
-  }
+/****** Random Sudoku Generator Styles ******/
 
-  .form-container {
-    align-self: center;
-  }
+#num-clues {
+  display: inline;
+  width: 50px;
+}
+
+#random-sudoku-btn {
+  display: block;
+  width: 100px;
+}
+
+/****** Form Container Styles ******/
+
+#form-container {
+  margin: 30px 20px 0 20px;
+}
+
+#text-input {
+  font-size: 16px;
+}
+
+.error-message {
+  color: red;
 }
