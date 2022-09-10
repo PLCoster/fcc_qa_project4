@@ -2,7 +2,7 @@
 const textArea = document.getElementById('text-input');
 const coordInput = document.getElementById('coord');
 const valInput = document.getElementById('val');
-const errorMsg = document.getElementById('error');
+const responseMsg = document.getElementById('response');
 
 // Function that updates puzzle string in text input
 // after typing numbers into sudoku grid
@@ -42,14 +42,15 @@ async function generateSudoku() {
   document.querySelector('#random-sudoku-btn').disabled = true;
   const numClues = parseInt(document.querySelector('#num-clues').value);
 
-  if (isNaN(numClues) || numClues < 17 || numClues > 25) {
+  if (isNaN(numClues) || numClues < 17 || numClues > 81) {
     document.querySelector('#num-clues').reportValidity();
   }
 
   const puzzleArr = Array(81).fill('.');
   const numCounts = Array(9).fill(9);
 
-  for (let i = 0; i < numClues; i += 1) {
+  // First generate a random puzzle with 20 clues
+  for (let i = 0; i < 20; i += 1) {
     let clueIndex = Math.floor(Math.random() * 81);
 
     while (puzzleArr[clueIndex] !== '.') {
@@ -72,7 +73,7 @@ async function generateSudoku() {
 
   const body = { puzzle: puzzleArr.join('') };
 
-  // Check if puzzle is solvable via API:
+  // Get Puzzle Solution via API
   const data = await fetch('/api/solve', {
     method: 'POST',
     headers: {
@@ -90,8 +91,22 @@ async function generateSudoku() {
     return;
   }
 
-  fillPuzzle(body.puzzle);
-  textArea.value = body.puzzle;
+  const solvedArr = result.solution.split('');
+
+  // Remove numbers randomly until numClues are left
+  for (let i = 0; i < 81 - numClues; i += 1) {
+    let clueIndex = Math.floor(Math.random() * 81);
+
+    while (solvedArr[clueIndex] === '.') {
+      clueIndex = Math.floor(Math.random() * 81);
+    }
+
+    solvedArr[clueIndex] = '.';
+  }
+
+  const sudokuToSolve = solvedArr.join('');
+  fillPuzzle(sudokuToSolve);
+  textArea.value = sudokuToSolve;
   document.querySelector('#random-sudoku-btn').disabled = false;
 }
 
@@ -152,10 +167,10 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 textArea.addEventListener('input', () => {
-  errorMsg.innerHTML = '';
+  responseMsg.innerHTML = '';
   if (!/^[1-9\.]{81}$/.test(textArea.value)) {
     textArea.classList.add('error');
-    errorMsg.innerHTML = `<code class="error-message">Sudoku puzzle string is not valid (wrong length or invalid characters)</code>`;
+    responseMsg.innerHTML = `<code class="error-message">Sudoku puzzle string is not valid (wrong length or invalid characters)</code>`;
   } else {
     fillPuzzle(textArea.value);
   }
@@ -172,14 +187,17 @@ async function getSolved() {
     body: JSON.stringify(body),
   });
   const parsed = await data.json();
+
+  // Update response with result or error
   if (parsed.error) {
-    errorMsg.innerHTML = `<code class="error-message">${JSON.stringify(
+    responseMsg.innerHTML = `<code class="error-message">${JSON.stringify(
       parsed,
       null,
       2,
     )}</code>`;
     return;
   }
+  responseMsg.innerHTML = `<code>${JSON.stringify(parsed, null, 2)}</code>`;
   fillPuzzle(parsed.solution);
 }
 
@@ -198,7 +216,17 @@ async function getChecked() {
     body: JSON.stringify(stuff),
   });
   const parsed = await data.json();
-  errorMsg.innerHTML = `<code>${JSON.stringify(parsed, null, 2)}</code>`;
+
+  if (parsed.error) {
+    responseMsg.innerHTML = `<code class="error-message">${JSON.stringify(
+      parsed,
+      null,
+      2,
+    )}</code>`;
+    return;
+  }
+
+  responseMsg.innerHTML = `<code>${JSON.stringify(parsed, null, 2)}</code>`;
 }
 
 document.getElementById('solve-button').addEventListener('click', getSolved);

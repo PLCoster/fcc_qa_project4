@@ -1,354 +1,1245 @@
 <!DOCTYPE html>
 <html>
+  <head>
+    <title>Sudoku Solver</title>
+    <meta
+      name="description"
+      content="An example of the Free Code Camp Personal Library Project"
+    />
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-<head>
-	<title>Sudoku Solver</title>
-	<meta name="description" content="An example for the fCC QA Sudoku Solver project" />
-	<meta charset="utf-8" />
-	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-	<meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link id="favicon" rel="icon" href="https://cdn.freecodecamp.org/universal/favicons/favicon-32x32.png" type="image/x-icon">
-	<link rel="stylesheet" href="../public/style.css" type="text/css" />
-</head>
+    <!-- FAVICONS -->
+    <link
+      rel="apple-touch-icon"
+      sizes="180x180"
+      href="/public/favicons/apple-touch-icon.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="32x32"
+      href="/public/favicons/favicon-32x32.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="16x16"
+      href="/public/favicons/favicon-16x16.png"
+    />
+    <link rel="manifest" href="/public/site.webmanifest" />
 
-<body>
-	<header>
-		<h1>Sudoku Solver</h1>
-	</header>
-	<div class="container">
-		<div class="form-container">
-			<form id="solve-form">
-				<textarea
-          rows="10"
-          cols="85"
-          id="text-input"
-          name="puzzle"
-        ></textarea>
-        <br />
-        <input type="button" value="Solve" id="solve-button"/>
-        <div id="error-msg"></div>
-        </form>
-        <form id="check-form">
-          <p>Coordinate (A1): <input id="coord" class="checker" type="text" name="coordinate"></p>
-          <p>Value (1-9): <input class="checker" type="text" id="val" name="value"></p>
-          <input type="button" id="check-button" value="Check Placement">
-        </form>
-        <span id="error"></span>
-      </div>
-      
-        <div id="sudoku-grid-container">
-        <div>
-          <table class="yAxisLegend">
-            <tr>
-              <td>A</td>
-            </tr>
-            <tr>
-              <td>B</td>
-            </tr>
-            <tr>
-              <td>C</td>
-            </tr>
-            <tr>
-              <td>D</td>
-            </tr>
-            <tr>
-              <td>E</td>
-            </tr>
-            <tr>
-              <td>F</td>
-            </tr>
-            <tr>
-              <td>G</td>
-            </tr>
-            <tr>
-              <td>H</td>
-            </tr>
-            <tr>
-              <td>I</td>
-            </tr>
-          </table>
-        </div>
-        <div id="sudoku-grid">
-          <table class="xAxisLegend">
-            <tr>
-              <td>1</td>
-              <td>2</td>
-              <td>3</td>
-              <td>4</td>
-              <td>5</td>
-              <td>6</td>
-              <td>7</td>
-              <td>8</td>
-              <td>9</td>
-            </tr>
-          </table>
-          <table class="grid">
-            <tbody>
-              <tr>
-                <td class="A1 sudoku-input" title="A1">
-                  
-                </td>
-                <td class="A2 sudoku-input" title="A2">
-                  
-                </td>
-                <td class="A3 sudoku-input" title="A3">
-                  
-                </td>
-                <td class="A4 sudoku-input" title="A4">
-                  
-                </td>
-                <td class="A5 sudoku-input" title="A5">
-                  
-                </td>
-                <td class="A6 sudoku-input" title="A6">
-                  
-                </td>
-                <td class="A7 sudoku-input" title="A7">
-                  
-                </td>
-                <td class="A8 sudoku-input" title="A8">
-                  
-                </td>
-                <td class="A9 sudoku-input" title="A9">
-                  
-                </td>
-              </tr>
-              <tr>
-                <td class="B1 sudoku-input" title="B1">
-                  
-                </td>
-                <td class="B2 sudoku-input" title="B2">
-                  
-                </td>
-                <td class="B3 sudoku-input" title="B3">
-                  
-                </td>
-                <td class="B4 sudoku-input" title="B4">
-                  
-                </td>
-                <td class="B5 sudoku-input" title="B5">
-                  
-                </td>
-                <td class="B6 sudoku-input" title="B6">
-                  
-                </td>
-                <td class="B7 sudoku-input" title="B7">
-                  
-                </td>
-                <td class="B8 sudoku-input" title="B8">
-                  
-                </td>
-                <td class="B9 sudoku-input" title="B9">
-                  
-                </td>
-              </tr>
-              <tr>
-                <td class="C1 sudoku-input" title="C1">
-                  
-                </td>
-                <td class="C2 sudoku-input" title="C2">
-                  
-                </td>
-                <td class="C3 sudoku-input" title="C3">
-                  
-                </td>
-                <td class="C4 sudoku-input" title="C4">
-                  
-                </td>
-                <td class="C5 sudoku-input" title="C5">
-                  
-                </td>
-                <td class="C6 sudoku-input" title="C6">
-                  
-                </td>
-                <td class="C7 sudoku-input" title="C7">
-                  
-                </td>
-                <td class="C8 sudoku-input" title="C8">
-                  
-                </td>
-                <td class="C9 sudoku-input" title="C9">
-                  
-                </td>
-              </tr>
-              <tr>
-                <td class="D1 sudoku-input" title="D1">
-                  
-                </td>
-                <td class="D2 sudoku-input" title="D2">
-                  
-                </td>
-                <td class="D3 sudoku-input" title="D3">
-                  
-                </td>
-                <td class="D4 sudoku-input" title="D4">
-                  
-                </td>
-                <td class="D5 sudoku-input" title="D5">
-                  
-                </td>
-                <td class="D6 sudoku-input" title="D6">
-                  
-                </td>
-                <td class="D7 sudoku-input" title="D7">
-                  
-                </td>
-                <td class="D8 sudoku-input" title="D8">
-                  
-                </td>
-                <td class="D9 sudoku-input" title="D9">
-                  
-                </td>
-              </tr>
-              <tr>
-                <td class="E1 sudoku-input" title="E1">
-                  
-                </td>
-                <td class="E2 sudoku-input" title="E2">
-                  
-                </td>
-                <td class="E3 sudoku-input" title="E3">
-                  
-                </td>
-                <td class="E4 sudoku-input" title="E4">
-                  
-                </td>
-                <td class="E5 sudoku-input" title="E5">
-                  
-                </td>
-                <td class="E6 sudoku-input" title="E6">
-                  
-                </td>
-                <td class="E7 sudoku-input" title="E7">
-                  
-                </td>
-                <td class="E8 sudoku-input" title="E8">
-                  
-                </td>
-                <td class="E9 sudoku-input" title="E9">
-                  
-                </td>
-              </tr>
-              <tr>
-                <td class="F1 sudoku-input" title="F1">
-                  
-                </td>
-                <td class="F2 sudoku-input" title="F2">
-                  
-                </td>
-                <td class="F3 sudoku-input" title="F3">
-                  
-                </td>
-                <td class="F4 sudoku-input" title="F4">
-                  
-                </td>
-                <td class="F5 sudoku-input" title="F5">
-                  
-                </td>
-                <td class="F6 sudoku-input" title="F6">
-                  
-                </td>
-                <td class="F7 sudoku-input" title="F7">
-                  
-                </td>
-                <td class="F8 sudoku-input" title="F8">
-                  
-                </td>
-                <td class="F9 sudoku-input" title="F9">
-                  
-                </td>
-              </tr>
-              <tr>
-                <td class="G1 sudoku-input" title="G1">
-                  
-                </td>
-                <td class="G2 sudoku-input" title="G2">
-                  
-                </td>
-                <td class="G3 sudoku-input" title="G3">
-                  
-                </td>
-                <td class="G4 sudoku-input" title="G4">
-                  
-                </td>
-                <td class="G5 sudoku-input" title="G5">
-                  
-                </td>
-                <td class="G6 sudoku-input" title="G6">
-                  
-                </td>
-                <td class="G7 sudoku-input" title="G7">
-                  
-                </td>
-                <td class="G8 sudoku-input" title="G8">
-                  
-                </td>
-                <td class="G9 sudoku-input" title="G9">
-                  
-                </td>
-              </tr>
-              <tr>
-                <td class="H1 sudoku-input" title="H1">
-                  
-                </td>
-                <td class="H2 sudoku-input" title="H2">
-                  
-                </td>
-                <td class="H3 sudoku-input" title="H3">
-                  
-                </td>
-                <td class="H4 sudoku-input" title="H4">
-                  
-                </td>
-                <td class="H5 sudoku-input" title="H5">
-                  
-                </td>
-                <td class="H6 sudoku-input" title="H6">
-                  
-                </td>
-                <td class="H7 sudoku-input" title="H7">
-                  
-                </td>
-                <td class="H8 sudoku-input" title="H8">
-                  
-                </td>
-                <td class="H9 sudoku-input" title="H9">
-                  
-                </td>
-              </tr>
-              <tr>
-                <td class="I1 sudoku-input" title="I1">
-                  
-                </td>
-                <td class="I2 sudoku-input" title="I2">
-                  
-                </td>
-                <td class="I3 sudoku-input" title="I3">
-                  
-                </td>
-                <td class="I4 sudoku-input" title="I4">
-                  
-                </td>
-                <td class="I5 sudoku-input" title="I5">
-                  
-                </td>
-                <td class="I6 sudoku-input" title="I6">
-                  
-                </td>
-                <td class="I7 sudoku-input" title="I7">
-                  
-                </td>
-                <td class="I8 sudoku-input" title="I8">
-                  
-                </td>
-                <td class="I9 sudoku-input" title="I9">
-                  
-                </td>
-              </tr>
-            </tbody>
-          </table>
+    <!-- STYLES -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor"
+      crossorigin="anonymous"
+    />
+    <link
+      rel="stylesheet"
+      href="https://use.fontawesome.com/releases/v5.15.4/css/all.css"
+      integrity="sha384-DyZ88mC6Up2uqS4h/KRgHuoeGwBcD4Ng9SiP4dIRy0EXTlnuz47vAwmeGwVChigm"
+      crossorigin="anonymous"
+    />
+    <link
+      href="https://fonts.googleapis.com/css?family=Roboto"
+      rel="stylesheet"
+      type="text/css"
+    />
+    <link rel="stylesheet" href="/public/style.css" type="text/css" />
+  </head>
+
+  <body>
+    <!-- NAVBAR -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+      <div class="container-fluid">
+        <a class="navbar-brand" href=".">Sudoku Solver</a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNavDropdown"
+          aria-controls="navbarNavDropdown"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNavDropdown">
+          <ul class="navbar-nav">
+            <li class="nav-item">
+              <a
+                class="nav-link active"
+                href="https://plcoster.github.io/homepage/"
+              >
+                Home
+              </a>
+            </li>
+            <li class="nav-item dropdown">
+              <a
+                class="nav-link dropdown-toggle"
+                href="#"
+                id="navbarDropdownMenuLink"
+                role="button"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+              >
+                FreeCodeCamp QA Projects
+              </a>
+              <ul
+                class="dropdown-menu"
+                aria-labelledby="navbarDropdownMenuLink"
+              >
+                <li>
+                  <a
+                    class="dropdown-item"
+                    href="https://fcc-qa-project1.plcoster.repl.co"
+                  >
+                    Metric - Imperial Converter
+                  </a>
+                </li>
+                <li>
+                  <a
+                    class="dropdown-item"
+                    href="https://fcc-qa-project2.plcoster.repl.co"
+                  >
+                    Issue Tracker
+                  </a>
+                </li>
+                <li>
+                  <a
+                    class="dropdown-item"
+                    href="https://fcc-qa-project3.plcoster.repl.co"
+                  >
+                    Personal Library
+                  </a>
+                </li>
+                <li>
+                  <a
+                    class="dropdown-item"
+                    href="https://fcc-qa-project4.plcoster.repl.co"
+                  >
+                    Sudoku Solver
+                  </a>
+                </li>
+                <li>
+                  <a
+                    class="dropdown-item"
+                    href="https://fcc-qa-project5.plcoster.repl.co"
+                  >
+                    American British Translator
+                  </a>
+                </li>
+              </ul>
+            </li>
+            <li class="nav-item">
+              <a
+                class="nav-link"
+                href="https://plcoster.github.io/homepage/projects.html"
+              >
+                All Projects
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="https://github.com/PLCoster">
+                <i class="fab fa-github"></i> Github
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="https://linkedin.com/in/plcoster">
+                <i class="fab fa-linkedin"></i>
+                LinkedIn
+              </a>
+            </li>
+          </ul>
         </div>
       </div>
+    </nav>
+
+    <div class="container">
+      <main>
+        <h1>
+          <img
+            class="logo"
+            src="/public/logo.png"
+            alt="White icon of a sudoku grid on a square green background"
+          />Sudoku Solver
+        </h1>
+        <hr />
+
+        <div
+          id="ui-container"
+          class="d-flex flex-row justify-content-center align-items-start flex-wrap"
+        >
+          <div class="d-flex flex-column align-items-center">
+            <!-- SUDOKU GRID -->
+            <div id="sudoku-grid-container">
+              <div>
+                <table class="yAxisLegend">
+                  <tr>
+                    <td>A</td>
+                  </tr>
+                  <tr>
+                    <td>B</td>
+                  </tr>
+                  <tr>
+                    <td>C</td>
+                  </tr>
+                  <tr>
+                    <td>D</td>
+                  </tr>
+                  <tr>
+                    <td>E</td>
+                  </tr>
+                  <tr>
+                    <td>F</td>
+                  </tr>
+                  <tr>
+                    <td>G</td>
+                  </tr>
+                  <tr>
+                    <td>H</td>
+                  </tr>
+                  <tr>
+                    <td>I</td>
+                  </tr>
+                </table>
+              </div>
+              <div class="d-flex flex-column justify-content-center">
+                <div id="sudoku-grid">
+                  <table class="xAxisLegend">
+                    <tr>
+                      <td>1</td>
+                      <td>2</td>
+                      <td>3</td>
+                      <td>4</td>
+                      <td>5</td>
+                      <td>6</td>
+                      <td>7</td>
+                      <td>8</td>
+                      <td>9</td>
+                    </tr>
+                  </table>
+                  <table class="grid">
+                    <tbody>
+                      <tr>
+                        <td class="A1">
+                          <input
+                            class="A1 sudoku-input"
+                            title="A1"
+                            type="number"
+                            min="1"
+                            max="9"
+                            name="input-A1"
+                            data-index="0"
+                          />
+                        </td>
+                        <td class="A2">
+                          <input
+                            class="A2 sudoku-input"
+                            title="A2"
+                            type="number"
+                            min="1"
+                            max="9"
+                            name="input-A2"
+                            data-index="1"
+                          />
+                        </td>
+                        <td class="A3">
+                          <input
+                            class="A3 sudoku-input"
+                            title="A3"
+                            type="number"
+                            min="1"
+                            max="9"
+                            name="input-A3"
+                            data-index="2"
+                          />
+                        </td>
+                        <td class="A4">
+                          <input
+                            class="A4 sudoku-input"
+                            title="A4"
+                            type="number"
+                            min="1"
+                            max="9"
+                            name="input-A4"
+                            data-index="3"
+                          />
+                        </td>
+                        <td class="A5">
+                          <input
+                            class="A5 sudoku-input"
+                            title="A5"
+                            type="number"
+                            min="1"
+                            max="9"
+                            name="input-A5"
+                            data-index="4"
+                          />
+                        </td>
+                        <td class="A6">
+                          <input
+                            class="A6 sudoku-input"
+                            title="A6"
+                            type="number"
+                            min="1"
+                            max="9"
+                            name="input-A6"
+                            data-index="5"
+                          />
+                        </td>
+                        <td class="A7">
+                          <input
+                            class="A7 sudoku-input"
+                            title="A7"
+                            type="number"
+                            min="1"
+                            max="9"
+                            name="input-A7"
+                            data-index="6"
+                          />
+                        </td>
+                        <td class="A8">
+                          <input
+                            class="A8 sudoku-input"
+                            title="A8"
+                            type="number"
+                            min="1"
+                            max="9"
+                            name="input-A8"
+                            data-index="7"
+                          />
+                        </td>
+                        <td class="A9">
+                          <input
+                            class="A9 sudoku-input"
+                            title="A9"
+                            type="number"
+                            min="1"
+                            max="9"
+                            name="input-A9"
+                            data-index="8"
+                          />
+                        </td>
+                      </tr>
+
+                      <tr>
+                        <td class="B1">
+                          <input
+                            class="B1 sudoku-input"
+                            title="B1"
+                            type="number"
+                            min="1"
+                            max="9"
+                            name="input-B1"
+                            data-index="9"
+                          />
+                        </td>
+                        <td class="B2">
+                          <input
+                            class="B2 sudoku-input"
+                            title="B2"
+                            type="number"
+                            min="1"
+                            max="9"
+                            name="input-B2"
+                            data-index="10"
+                          />
+                        </td>
+                        <td class="B3">
+                          <input
+                            class="B3 sudoku-input"
+                            title="B3"
+                            type="number"
+                            min="1"
+                            max="9"
+                            name="input-B3"
+                            data-index="11"
+                          />
+                        </td>
+                        <td class="B4">
+                          <input
+                            class="B4 sudoku-input"
+                            title="B4"
+                            type="number"
+                            min="1"
+                            max="9"
+                            name="input-B4"
+                            data-index="12"
+                          />
+                        </td>
+                        <td class="B5">
+                          <input
+                            class="B5 sudoku-input"
+                            title="B5"
+                            type="number"
+                            min="1"
+                            max="9"
+                            name="input-B5"
+                            data-index="13"
+                          />
+                        </td>
+                        <td class="B6">
+                          <input
+                            class="B6 sudoku-input"
+                            title="B6"
+                            type="number"
+                            min="1"
+                            max="9"
+                            name="input-B6"
+                            data-index="14"
+                          />
+                        </td>
+                        <td class="B7">
+                          <input
+                            class="B7 sudoku-input"
+                            title="B7"
+                            type="number"
+                            min="1"
+                            max="9"
+                            name="input-B7"
+                            data-index="15"
+                          />
+                        </td>
+                        <td class="B8">
+                          <input
+                            class="B8 sudoku-input"
+                            title="B8"
+                            type="number"
+                            min="1"
+                            max="9"
+                            name="input-B8"
+                            data-index="16"
+                          />
+                        </td>
+                        <td class="B9">
+                          <input
+                            class="B9 sudoku-input"
+                            title="B9"
+                            type="number"
+                            min="1"
+                            max="9"
+                            name="input-B9"
+                            data-index="17"
+                          />
+                        </td>
+                      </tr>
+
+                      <tr>
+                        <td class="C1">
+                          <input
+                            class="C1 sudoku-input"
+                            title="C1"
+                            type="number"
+                            min="1"
+                            max="9"
+                            name="input-C1"
+                            data-index="18"
+                          />
+                        </td>
+                        <td class="C2">
+                          <input
+                            class="C2 sudoku-input"
+                            title="C2"
+                            type="number"
+                            min="1"
+                            max="9"
+                            name="input-C2"
+                            data-index="19"
+                          />
+                        </td>
+                        <td class="C3">
+                          <input
+                            class="C3 sudoku-input"
+                            title="C3"
+                            type="number"
+                            min="1"
+                            max="9"
+                            name="input-C3"
+                            data-index="20"
+                          />
+                        </td>
+                        <td class="C4">
+                          <input
+                            class="C4 sudoku-input"
+                            title="C4"
+                            type="number"
+                            min="1"
+                            max="9"
+                            name="input-C4"
+                            data-index="21"
+                          />
+                        </td>
+                        <td class="C5">
+                          <input
+                            class="C5 sudoku-input"
+                            title="C5"
+                            type="number"
+                            min="1"
+                            max="9"
+                            name="input-C5"
+                            data-index="22"
+                          />
+                        </td>
+                        <td class="C6">
+                          <input
+                            class="C6 sudoku-input"
+                            title="C6"
+                            type="number"
+                            min="1"
+                            max="9"
+                            name="input-C6"
+                            data-index="23"
+                          />
+                        </td>
+                        <td class="C7">
+                          <input
+                            class="C7 sudoku-input"
+                            title="C7"
+                            type="number"
+                            min="1"
+                            max="9"
+                            name="input-C7"
+                            data-index="24"
+                          />
+                        </td>
+                        <td class="C8">
+                          <input
+                            class="C8 sudoku-input"
+                            title="C8"
+                            type="number"
+                            min="1"
+                            max="9"
+                            name="input-C8"
+                            data-index="25"
+                          />
+                        </td>
+                        <td class="C9">
+                          <input
+                            class="C9 sudoku-input"
+                            title="C9"
+                            type="number"
+                            min="1"
+                            max="9"
+                            name="input-C9"
+                            data-index="26"
+                          />
+                        </td>
+                      </tr>
+
+                      <tr>
+                        <td class="D1">
+                          <input
+                            class="D1 sudoku-input"
+                            title="D1"
+                            type="number"
+                            min="1"
+                            max="9"
+                            name="input-D1"
+                            data-index="27"
+                          />
+                        </td>
+                        <td class="D2">
+                          <input
+                            class="D2 sudoku-input"
+                            title="D2"
+                            type="number"
+                            min="1"
+                            max="9"
+                            name="input-D2"
+                            data-index="28"
+                          />
+                        </td>
+                        <td class="D3">
+                          <input
+                            class="D3 sudoku-input"
+                            title="D3"
+                            type="number"
+                            min="1"
+                            max="9"
+                            name="input-D3"
+                            data-index="29"
+                          />
+                        </td>
+                        <td class="D4">
+                          <input
+                            class="D4 sudoku-input"
+                            title="D4"
+                            type="number"
+                            min="1"
+                            max="9"
+                            name="input-D4"
+                            data-index="30"
+                          />
+                        </td>
+                        <td class="D5">
+                          <input
+                            class="D5 sudoku-input"
+                            title="D5"
+                            type="number"
+                            min="1"
+                            max="9"
+                            name="input-D5"
+                            data-index="31"
+                          />
+                        </td>
+                        <td class="D6">
+                          <input
+                            class="D6 sudoku-input"
+                            title="D6"
+                            type="number"
+                            min="1"
+                            max="9"
+                            name="input-D6"
+                            data-index="32"
+                          />
+                        </td>
+                        <td class="D7">
+                          <input
+                            class="D7 sudoku-input"
+                            title="D7"
+                            type="number"
+                            min="1"
+                            max="9"
+                            name="input-D7"
+                            data-index="33"
+                          />
+                        </td>
+                        <td class="D8">
+                          <input
+                            class="D8 sudoku-input"
+                            title="D8"
+                            type="number"
+                            min="1"
+                            max="9"
+                            name="input-D8"
+                            data-index="34"
+                          />
+                        </td>
+                        <td class="D9">
+                          <input
+                            class="D9 sudoku-input"
+                            title="D9"
+                            type="number"
+                            min="1"
+                            max="9"
+                            name="input-D9"
+                            data-index="35"
+                          />
+                        </td>
+                      </tr>
+
+                      <tr>
+                        <td class="E1">
+                          <input
+                            class="E1 sudoku-input"
+                            title="E1"
+                            type="number"
+                            min="1"
+                            max="9"
+                            name="input-E1"
+                            data-index="36"
+                          />
+                        </td>
+                        <td class="E2">
+                          <input
+                            class="E2 sudoku-input"
+                            title="E2"
+                            type="number"
+                            min="1"
+                            max="9"
+                            name="input-E2"
+                            data-index="37"
+                          />
+                        </td>
+                        <td class="E3">
+                          <input
+                            class="E3 sudoku-input"
+                            title="E3"
+                            type="number"
+                            min="1"
+                            max="9"
+                            name="input-E3"
+                            data-index="38"
+                          />
+                        </td>
+                        <td class="E4">
+                          <input
+                            class="E4 sudoku-input"
+                            title="E4"
+                            type="number"
+                            min="1"
+                            max="9"
+                            name="input-E4"
+                            data-index="39"
+                          />
+                        </td>
+                        <td class="E5">
+                          <input
+                            class="E5 sudoku-input"
+                            title="E5"
+                            type="number"
+                            min="1"
+                            max="9"
+                            name="input-E5"
+                            data-index="40"
+                          />
+                        </td>
+                        <td class="E6">
+                          <input
+                            class="E6 sudoku-input"
+                            title="E6"
+                            type="number"
+                            min="1"
+                            max="9"
+                            name="input-E6"
+                            data-index="41"
+                          />
+                        </td>
+                        <td class="E7">
+                          <input
+                            class="E7 sudoku-input"
+                            title="E7"
+                            type="number"
+                            min="1"
+                            max="9"
+                            name="input-E7"
+                            data-index="42"
+                          />
+                        </td>
+                        <td class="E8">
+                          <input
+                            class="E8 sudoku-input"
+                            title="E8"
+                            type="number"
+                            min="1"
+                            max="9"
+                            name="input-E8"
+                            data-index="43"
+                          />
+                        </td>
+                        <td class="E9">
+                          <input
+                            class="E9 sudoku-input"
+                            title="E9"
+                            type="number"
+                            min="1"
+                            max="9"
+                            name="input-E9"
+                            data-index="44"
+                          />
+                        </td>
+                      </tr>
+
+                      <tr>
+                        <td class="F1">
+                          <input
+                            class="F1 sudoku-input"
+                            title="F1"
+                            type="number"
+                            min="1"
+                            max="9"
+                            name="input-F1"
+                            data-index="45"
+                          />
+                        </td>
+                        <td class="F2">
+                          <input
+                            class="F2 sudoku-input"
+                            title="F2"
+                            type="number"
+                            min="1"
+                            max="9"
+                            name="input-F2"
+                            data-index="46"
+                          />
+                        </td>
+                        <td class="F3">
+                          <input
+                            class="F3 sudoku-input"
+                            title="F3"
+                            type="number"
+                            min="1"
+                            max="9"
+                            name="input-F3"
+                            data-index="47"
+                          />
+                        </td>
+                        <td class="F4">
+                          <input
+                            class="F4 sudoku-input"
+                            title="F4"
+                            type="number"
+                            min="1"
+                            max="9"
+                            name="input-F4"
+                            data-index="48"
+                          />
+                        </td>
+                        <td class="F5">
+                          <input
+                            class="F5 sudoku-input"
+                            title="F5"
+                            type="number"
+                            min="1"
+                            max="9"
+                            name="input-F5"
+                            data-index="49"
+                          />
+                        </td>
+                        <td class="F6">
+                          <input
+                            class="F6 sudoku-input"
+                            title="F6"
+                            type="number"
+                            min="1"
+                            max="9"
+                            name="input-F6"
+                            data-index="50"
+                          />
+                        </td>
+                        <td class="F7">
+                          <input
+                            class="F7 sudoku-input"
+                            title="F7"
+                            type="number"
+                            min="1"
+                            max="9"
+                            name="input-F7"
+                            data-index="51"
+                          />
+                        </td>
+                        <td class="F8">
+                          <input
+                            class="F8 sudoku-input"
+                            title="F8"
+                            type="number"
+                            min="1"
+                            max="9"
+                            name="input-F8"
+                            data-index="52"
+                          />
+                        </td>
+                        <td class="F9">
+                          <input
+                            class="F9 sudoku-input"
+                            title="F9"
+                            type="number"
+                            min="1"
+                            max="9"
+                            name="input-F9"
+                            data-index="53"
+                          />
+                        </td>
+                      </tr>
+
+                      <tr>
+                        <td class="G1">
+                          <input
+                            class="G1 sudoku-input"
+                            title="G1"
+                            type="number"
+                            min="1"
+                            max="9"
+                            name="input-G1"
+                            data-index="54"
+                          />
+                        </td>
+                        <td class="G2">
+                          <input
+                            class="G2 sudoku-input"
+                            title="G2"
+                            type="number"
+                            min="1"
+                            max="9"
+                            name="input-G2"
+                            data-index="55"
+                          />
+                        </td>
+                        <td class="G3">
+                          <input
+                            class="G3 sudoku-input"
+                            title="G3"
+                            type="number"
+                            min="1"
+                            max="9"
+                            name="input-G3"
+                            data-index="56"
+                          />
+                        </td>
+                        <td class="G4">
+                          <input
+                            class="G4 sudoku-input"
+                            title="G4"
+                            type="number"
+                            min="1"
+                            max="9"
+                            name="input-G4"
+                            data-index="57"
+                          />
+                        </td>
+                        <td class="G5">
+                          <input
+                            class="G5 sudoku-input"
+                            title="G5"
+                            type="number"
+                            min="1"
+                            max="9"
+                            name="input-G5"
+                            data-index="58"
+                          />
+                        </td>
+                        <td class="G6">
+                          <input
+                            class="G6 sudoku-input"
+                            title="G6"
+                            type="number"
+                            min="1"
+                            max="9"
+                            name="input-G6"
+                            data-index="59"
+                          />
+                        </td>
+                        <td class="G7">
+                          <input
+                            class="G7 sudoku-input"
+                            title="G7"
+                            type="number"
+                            min="1"
+                            max="9"
+                            name="input-G7"
+                            data-index="60"
+                          />
+                        </td>
+                        <td class="G8">
+                          <input
+                            class="G8 sudoku-input"
+                            title="G8"
+                            type="number"
+                            min="1"
+                            max="9"
+                            name="input-G8"
+                            data-index="61"
+                          />
+                        </td>
+                        <td class="G9">
+                          <input
+                            class="G9 sudoku-input"
+                            title="G9"
+                            type="number"
+                            min="1"
+                            max="9"
+                            name="input-G9"
+                            data-index="62"
+                          />
+                        </td>
+                      </tr>
+
+                      <tr>
+                        <td class="H1">
+                          <input
+                            class="H1 sudoku-input"
+                            title="H1"
+                            type="number"
+                            min="1"
+                            max="9"
+                            name="input-H1"
+                            data-index="63"
+                          />
+                        </td>
+                        <td class="H2">
+                          <input
+                            class="H2 sudoku-input"
+                            title="H2"
+                            type="number"
+                            min="1"
+                            max="9"
+                            name="input-H2"
+                            data-index="64"
+                          />
+                        </td>
+                        <td class="H3">
+                          <input
+                            class="H3 sudoku-input"
+                            title="H3"
+                            type="number"
+                            min="1"
+                            max="9"
+                            name="input-H3"
+                            data-index="65"
+                          />
+                        </td>
+                        <td class="H4">
+                          <input
+                            class="H4 sudoku-input"
+                            title="H4"
+                            type="number"
+                            min="1"
+                            max="9"
+                            name="input-H4"
+                            data-index="66"
+                          />
+                        </td>
+                        <td class="H5">
+                          <input
+                            class="H5 sudoku-input"
+                            title="H5"
+                            type="number"
+                            min="1"
+                            max="9"
+                            name="input-H5"
+                            data-index="67"
+                          />
+                        </td>
+                        <td class="H6">
+                          <input
+                            class="H6 sudoku-input"
+                            title="H6"
+                            type="number"
+                            min="1"
+                            max="9"
+                            name="input-H6"
+                            data-index="68"
+                          />
+                        </td>
+                        <td class="H7">
+                          <input
+                            class="H7 sudoku-input"
+                            title="H7"
+                            type="number"
+                            min="1"
+                            max="9"
+                            name="input-H7"
+                            data-index="69"
+                          />
+                        </td>
+                        <td class="H8">
+                          <input
+                            class="H8 sudoku-input"
+                            title="H8"
+                            type="number"
+                            min="1"
+                            max="9"
+                            name="input-H8"
+                            data-index="70"
+                          />
+                        </td>
+                        <td class="H9">
+                          <input
+                            class="H9 sudoku-input"
+                            title="H9"
+                            type="number"
+                            min="1"
+                            max="9"
+                            name="input-H9"
+                            data-index="71"
+                          />
+                        </td>
+                      </tr>
+
+                      <tr>
+                        <td class="I1">
+                          <input
+                            class="I1 sudoku-input"
+                            title="I1"
+                            type="number"
+                            min="1"
+                            max="9"
+                            name="input-I1"
+                            data-index="72"
+                          />
+                        </td>
+                        <td class="I2">
+                          <input
+                            class="I2 sudoku-input"
+                            title="I2"
+                            type="number"
+                            min="1"
+                            max="9"
+                            name="input-I2"
+                            data-index="73"
+                          />
+                        </td>
+                        <td class="I3">
+                          <input
+                            class="I3 sudoku-input"
+                            title="I3"
+                            type="number"
+                            min="1"
+                            max="9"
+                            name="input-I3"
+                            data-index="74"
+                          />
+                        </td>
+                        <td class="I4">
+                          <input
+                            class="I4 sudoku-input"
+                            title="I4"
+                            type="number"
+                            min="1"
+                            max="9"
+                            name="input-I4"
+                            data-index="75"
+                          />
+                        </td>
+                        <td class="I5">
+                          <input
+                            class="I5 sudoku-input"
+                            title="I5"
+                            type="number"
+                            min="1"
+                            max="9"
+                            name="input-I5"
+                            data-index="76"
+                          />
+                        </td>
+                        <td class="I6">
+                          <input
+                            class="I6 sudoku-input"
+                            title="I6"
+                            type="number"
+                            min="1"
+                            max="9"
+                            name="input-I6"
+                            data-index="77"
+                          />
+                        </td>
+                        <td class="I7">
+                          <input
+                            class="I7 sudoku-input"
+                            title="I7"
+                            type="number"
+                            min="1"
+                            max="9"
+                            name="input-I7"
+                            data-index="78"
+                          />
+                        </td>
+                        <td class="I8">
+                          <input
+                            class="I8 sudoku-input"
+                            title="I8"
+                            type="number"
+                            min="1"
+                            max="9"
+                            name="input-I8"
+                            data-index="79"
+                          />
+                        </td>
+                        <td class="I9">
+                          <input
+                            class="I9 sudoku-input"
+                            title="I9"
+                            type="number"
+                            min="1"
+                            max="9"
+                            name="input-I9"
+                            data-index="80"
+                          />
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+            <div class="generator-input-container">
+              <p>
+                Generate Random Solvable Sudoku with
+                <input
+                  id="num-clues"
+                  type="number"
+                  min="17"
+                  max="81"
+                  placeholder="17"
+                  value="17"
+                  required
+                />
+                Clues
+              </p>
+              <button
+                id="random-sudoku-btn"
+                class="btn btn-sm btn-success"
+                type="button"
+              >
+                Generate
+              </button>
+            </div>
+          </div>
+
+          <div class="d-flex flex-column align-items-center">
+            <!-- INPUT FORMS -->
+            <div
+              id="form-container"
+              class="d-flex flex-row justify-content-center flex-wrap"
+            >
+              <!-- PUZZLE SOLVE FORM -->
+              <form id="solve-form">
+                <h4>Solve Sudoku</h4>
+                <p><code>POST /api/solve</code></p>
+                <textarea
+                  id="text-input"
+                  rows="3"
+                  class="form-control form-control-sm"
+                  name="puzzle"
+                  required
+                ></textarea>
+                <input
+                  id="solve-button"
+                  class="btn btn-sm btn-success"
+                  type="button"
+                  value="Solve"
+                />
+              </form>
+
+              <!-- MOVE CHECK FORM -->
+              <form id="check-form">
+                <h4>Check a Move</h4>
+                <p><code>POST /api/check</code></p>
+                <p>
+                  Coordinate (A1 - I9):
+                  <input
+                    id="coord"
+                    class="checker form-control form-control-sm"
+                    type="text"
+                    name="coordinate"
+                    placeholder="A1"
+                    required
+                  />
+                </p>
+                <p>
+                  Value (1-9):
+                  <input
+                    class="checker form-control form-control-sm"
+                    type="number"
+                    id="val"
+                    name="value"
+                    min="1"
+                    max="9"
+                    required
+                  />
+                </p>
+                <input
+                  id="check-button"
+                  class="btn btn-success btn-sm"
+                  type="button"
+                  value="Check Placement"
+                />
+              </form>
+            </div>
+            <!-- INFO / ERROR MESSAGES SHOW HERE -->
+            <div id="response-display">
+              <p>
+                Response:
+                <span id="response">Submit a form to view response</span>
+              </p>
+            </div>
+          </div>
+        </div>
+      </main>
     </div>
   </body>
   <script type="module" src="../public/index.js"></script>

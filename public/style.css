@@ -112,7 +112,7 @@ code ul.indent {
   display: flex;
   flex-direction: row;
   --grid-cell-size: 3em;
-  padding: 0 var(--grid-cell-size) var(--grid-cell-size) 0;
+  padding: 0 var(--grid-cell-size) 0 0;
 }
 
 #sudoku-grid {
@@ -238,13 +238,20 @@ td.I6 {
 
 /****** Random Sudoku Generator Styles ******/
 
+.generator-input-container {
+  text-align: center;
+}
+
+.generator-input-container p {
+  margin-bottom: 0;
+}
+
 #num-clues {
   display: inline;
   width: 50px;
 }
 
 #random-sudoku-btn {
-  display: block;
   width: 100px;
 }
 
@@ -256,6 +263,17 @@ td.I6 {
 
 #text-input {
   font-size: 16px;
+}
+
+#response-display {
+  /* !!! */
+  width: 100%;
+  text-align: center;
+  white-space: nowrap;
+}
+
+#response-display p {
+  overflow-x: auto;
 }
 
 .error-message {
