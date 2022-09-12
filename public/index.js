@@ -2,6 +2,7 @@
 const textArea = document.getElementById('text-input');
 const coordInput = document.getElementById('coord');
 const valInput = document.getElementById('val');
+const puzzleStrErr = document.getElementById('puzzle-str-err');
 const responseMsg = document.getElementById('response');
 
 // Function that updates puzzle string in text input
@@ -19,9 +20,7 @@ function updatePuzzleString() {
 function fillPuzzle(data) {
   // Remove errors since this is only called in non-error state
   textArea.classList.remove('error');
-  document
-    .querySelectorAll('.sudoku-input')
-    .forEach((inputEl) => inputEl.classList.remove('error'));
+  puzzleStrErr.innerHTML = '';
 
   // Fill Sudoku grid from puzzle string
   let len = data.length < 81 ? data.length : 81;
@@ -49,8 +48,8 @@ async function generateSudoku() {
   const puzzleArr = Array(81).fill('.');
   const numCounts = Array(9).fill(9);
 
-  // First generate a random puzzle with 20 clues
-  for (let i = 0; i < 20; i += 1) {
+  // First generate a random puzzle with 17 clues
+  for (let i = 0; i < 17; i += 1) {
     let clueIndex = Math.floor(Math.random() * 81);
 
     while (puzzleArr[clueIndex] !== '.') {
@@ -137,45 +136,7 @@ function validClue(puzzleArr, position, value) {
   return true;
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-  // Set up updating puzzle string on input to sudoku grid:
-  document.querySelectorAll('.sudoku-input').forEach((inputEl) => {
-    inputEl.addEventListener('keyup', (event) => {
-      event.target.classList.remove('error');
-      if (
-        !['', '1', '2', '3', '4', '5', '6', '7', '8', '9'].includes(
-          event.target.value,
-        )
-      ) {
-        event.target.classList.add('error');
-      } else {
-        updatePuzzleString();
-        fillPuzzle();
-      }
-    });
-  });
-
-  // Set up on click random sudoku generation:
-  document
-    .querySelector('#random-sudoku-btn')
-    .addEventListener('click', () => generateSudoku());
-
-  // Load Example Sudoku Puzzle
-  textArea.value =
-    '..9..5.1.85.4....2432......1...69.83.9.....6.62.71...9......1945....4.37.4.3..6..';
-  fillPuzzle(textArea.value);
-});
-
-textArea.addEventListener('input', () => {
-  responseMsg.innerHTML = '';
-  if (!/^[1-9\.]{81}$/.test(textArea.value)) {
-    textArea.classList.add('error');
-    responseMsg.innerHTML = `<code class="error-message">Sudoku puzzle string is not valid (wrong length or invalid characters)</code>`;
-  } else {
-    fillPuzzle(textArea.value);
-  }
-});
-
+// Function to call API with textarea string asking for puzzle solution
 async function getSolved() {
   const body = { puzzle: textArea.value };
   const data = await fetch('/api/solve', {
@@ -199,8 +160,10 @@ async function getSolved() {
   }
   responseMsg.innerHTML = `<code>${JSON.stringify(parsed, null, 2)}</code>`;
   fillPuzzle(parsed.solution);
+  textArea.value = parsed.solution;
 }
 
+// Function to call API to check a single move on current puzzle string
 async function getChecked() {
   const stuff = {
     puzzle: textArea.value,
@@ -229,5 +192,58 @@ async function getChecked() {
   responseMsg.innerHTML = `<code>${JSON.stringify(parsed, null, 2)}</code>`;
 }
 
-document.getElementById('solve-button').addEventListener('click', getSolved);
-document.getElementById('check-button').addEventListener('click', getChecked);
+document.addEventListener('DOMContentLoaded', () => {
+  // Set up updating puzzle string on input to sudoku grid:
+  document.querySelectorAll('.sudoku-input').forEach((inputEl) => {
+    inputEl.addEventListener('keyup', (event) => {
+      event.target.classList.remove('error');
+
+      // If value is valid, update
+      if (
+        ['', '1', '2', '3', '4', '5', '6', '7', '8', '9'].includes(
+          event.target.value,
+        )
+      ) {
+        updatePuzzleString();
+        fillPuzzle(textArea.value);
+      }
+
+      const lastChar = event.target.value[event.target.value.length - 1];
+      // Otherwise try to remove erroneous input
+      if (
+        ['', '1', '2', '3', '4', '5', '6', '7', '8', '9'].includes(lastChar)
+      ) {
+        event.target.value = lastChar;
+        updatePuzzleString();
+        fillPuzzle(textArea.value);
+      } else {
+        console.log('whoops');
+        event.target.value = '';
+        updatePuzzleString();
+        fillPuzzle(textArea.value);
+      }
+    });
+  });
+
+  // Set up on click random sudoku generation:
+  document
+    .querySelector('#random-sudoku-btn')
+    .addEventListener('click', () => generateSudoku());
+
+  // Load Example Sudoku Puzzle
+  generateSudoku();
+
+  // Update Sudoku grid when input into textarea
+  textArea.addEventListener('input', () => {
+    if (!/^[1-9\.]{81}$/.test(textArea.value)) {
+      textArea.classList.add('error');
+      puzzleStrErr.innerHTML = `<code class="error-message">Sudoku puzzle string is not valid (wrong length or invalid characters)</code>`;
+    } else {
+      fillPuzzle(textArea.value);
+    }
+  });
+
+  // Setup Solve and Check form on click effects
+  document.getElementById('solve-button').addEventListener('click', getSolved);
+  document.getElementById('check-button').addEventListener('click', getChecked);
+});

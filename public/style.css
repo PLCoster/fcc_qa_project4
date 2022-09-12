@@ -134,7 +134,7 @@ td {
 }
 
 .yAxisLegend {
-  margin-top: var(--grid-cell-size);
+  margin-top: 2em;
   border-top: 3px solid rgba(0, 0, 0, 0);
   border-bottom: 3px solid rgba(0, 0, 0, 0);
   text-align: center;
@@ -156,7 +156,7 @@ td {
 .xAxisLegend tr td {
   border: 1px solid rgba(0, 0, 0, 0);
   width: var(--grid-cell-size);
-  height: 1em;
+  height: 2em;
   text-align: center;
   vertical-align: bottom;
   padding-bottom: 0;
@@ -239,6 +239,7 @@ td.I6 {
 /****** Random Sudoku Generator Styles ******/
 
 .generator-input-container {
+  margin-top: 10px;
   text-align: center;
 }
 
@@ -265,14 +266,21 @@ td.I6 {
   font-size: 16px;
 }
 
-#response-display {
-  /* !!! */
-  width: 100%;
+#puzzle-str-err {
+  margin: 0 10px;
+  max-width: 260px;
   text-align: center;
-  white-space: nowrap;
+  overflow-x: auto;
 }
 
-#response-display p {
+#response-display {
+  width: 100%;
+}
+
+#response-display code {
+  display: inline-block;
+  white-space: nowrap;
+  max-width: 300px;
   overflow-x: auto;
 }
 
