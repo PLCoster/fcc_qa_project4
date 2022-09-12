@@ -1246,7 +1246,104 @@
             </div>
           </div>
         </div>
+
+        <hr />
+
+        <section>
+          <h3>Example Usage:</h3>
+
+          <h5>To Check a Move:</h5>
+          <ul class="usage-list">
+            <li>
+              Submit the 'Check a Move' form above with valid Coordinate (A1 -
+              I9) and value for the move (1-9), as well as a valid puzzle string
+              in the 'Solve Sudoku' form.
+            </li>
+            <li>
+              Alternatively, send a POST request to
+              <code>/api/check</code> with a body consisting of url encoded
+              fields of <code>puzzle</code>, <code>coordinate</code> and
+              <code>value</code>.
+            </li>
+          </ul>
+
+          <h5>To Solve a Puzzle:</h5>
+          <ul class="usage-list">
+            <li>
+              Submit the 'Solve Sudoku' form above with a valid puzzle string
+              (81 characters '1' to '9' or '.' to denote a blank space)/
+            </li>
+            <li>
+              Alternatively, send a POST request to
+              <code>/api/solve</code> with a body consisting of a url encoded
+              field of <code>puzzle</code>, the puzzle string.
+            </li>
+          </ul>
+
+          <h3>Example Output:</h3>
+          <p>On requesting the solution for a puzzle:</p>
+
+          <code class="block">
+            # On submitting a solvable sudoku
+            <br />
+            {
+            <ul class="indent">
+              <li>
+                "solution":
+                "279358164156427389438916725643789251785261493912534876527643918864192537391875642",
+              </li>
+            </ul>
+            }
+            <br />
+            <br />
+            # On submitting an unsolvable sudoku
+            <br />
+            {
+            <ul class="indent">
+              <li>"error": "Puzzle cannot be solved"</li>
+            </ul>
+            }
+          </code>
+
+          <p>On requesting a move check:</p>
+
+          <code class="block">
+            # On submitting a valid move with no conflicts:
+            <br />
+            {
+            <ul class="indent">
+              <li>"valid": true,</li>
+            </ul>
+            }
+            <br />
+            <br />
+            # On submitting an invalid move that conflicts along its row, column
+            and region
+            <br />
+            {
+            <ul class="indent">
+              <li>"valid": false</li>
+              <li>"conflict": [ "row", "column", "region" ]</li>
+            </ul>
+            }
+          </code>
+
+          <p>
+            If an invalid puzzle string, coordinate or value is sent for any of
+            these operations, a JSON with an 'error' property is returned
+            explaining the problem.
+          </p>
+        </section>
       </main>
+
+      <hr />
+
+      <footer>
+        <p>
+          A project set by
+          <a href="https://www.freecodecamp.org/">freeCodeCamp</a>
+        </p>
+      </footer>
     </div>
 
     <!-- Bootstrap Script -->
