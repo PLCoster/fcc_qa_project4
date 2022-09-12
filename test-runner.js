@@ -31,7 +31,6 @@ const EventEmitter = require('events').EventEmitter;
 const Mocha = require('mocha'),
   fs = require('fs'),
   path = require('path');
-// require("@babel/register");
 
 const mocha = new Mocha({ timeout: 5000 });
 const testDir = './tests';

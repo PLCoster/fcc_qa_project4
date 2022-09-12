@@ -8,7 +8,7 @@ const puzzlesAndSolutions = require('../controllers/puzzle-strings');
 
 suite('Unit Tests', () => {
   suite('SudokuSolver.validate Tests', () => {
-    test('SudokuSolver.validate validates valid puzzleStrings', () => {
+    test('SudokuSolver.validate validates valid puzzleStrings', (done) => {
       let valid, err;
 
       [valid, err] = solver.validate('.'.repeat(81));
@@ -26,6 +26,11 @@ suite('Unit Tests', () => {
         assert.isTrue(valid, 'puzzleString should be validated');
         assert.deepEqual(err, {}, 'No error should be returned');
       }
+
+      // FCC Test Runner hangs unless we have something here:
+      // e.g. done or assertion
+      // Related to for..of loop?
+      done();
     });
 
     test('SudokuSolver.validate returns length error when puzzleString has wrong length ', () => {
@@ -233,6 +238,10 @@ suite('Unit Tests', () => {
         assert.equal(result.length, 81);
         assert.isTrue(/[1-9]{81}/.test(result));
       }
+
+      // FCC Test Runner hangs unless we have something here (done or assertion):
+      // Related to for..of loop?
+      assert.isTrue(true);
     });
 
     test('SudokuSolver.solve returns false for non solvable puzzle strings', () => {
@@ -299,6 +308,11 @@ suite('Unit Tests', () => {
         assert.isTrue(/[1-9]{81}/.test(result));
         assert.equal(result, solution);
       }
+
+      // FCC Test Runner hangs unless we have something here:
+      // e.g. done or assertion
+      // Related to for..of loop?
+      assert.isTrue(true);
     });
   });
 });

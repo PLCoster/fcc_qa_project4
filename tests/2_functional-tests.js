@@ -281,7 +281,7 @@ suite('Functional Tests', () => {
         const expectedResponses = [
           { valid: false, conflict: ['row', 'region'] },
           { valid: false, conflict: ['row', 'column'] },
-          { valid: false, conflict: ['column', 'region'] }, // !!!
+          { valid: false, conflict: ['column', 'region'] },
         ];
 
         Promise.all(
@@ -400,6 +400,82 @@ suite('Functional Tests', () => {
               );
             });
 
+            done();
+          })
+          .catch((err) => done(err));
+      });
+
+      test('Test POST /api/check with puzzle containing invalid characters returns an "Invalid characters" error', (done) => {
+        const puzzle =
+          '..9..5.1.85.a....2432......1...69.83.9.....6.62.71...9......1945....4.37.4.3..6..'; // contains 'a' character
+        const coordinate = 'A1';
+        const value = '7';
+
+        const expectedResponse = {
+          error: 'Invalid characters in puzzle',
+        };
+
+        chai
+          .request(server)
+          .post('/api/check')
+          .send({ puzzle, coordinate, value })
+          .then((res) => {
+            assert.equal(res.status, 200, 'Response status should be 200'); // !!!
+            assert.equal(
+              res.type,
+              'application/json',
+              'Response type should be application/json',
+            );
+            assert.isObject(res.body, 'Response body should be an object');
+            assert.include(
+              res.body,
+              expectedResponse,
+              'Response should contain error property with "invalid characters" error message',
+            );
+
+            done();
+          })
+          .catch((err) => done(err));
+      });
+
+      test('Test POST /api/check with puzzle of incorrect length returns an "incorrect length" error', (done) => {
+        const invalidPuzzleStrings = [
+          '.',
+          '.'.repeat(80),
+          '.'.repeat(82),
+          '.'.repeat(81) + 'a', // Length error overrides character error
+        ];
+
+        const coordinate = 'A1';
+        const value = '7';
+
+        const expectedResponse = {
+          error: 'Expected puzzle to be 81 characters long',
+        };
+
+        Promise.all(
+          invalidPuzzleStrings.map((puzzle) => {
+            return chai
+              .request(server)
+              .post('/api/check')
+              .send({ puzzle, coordinate, value });
+          }),
+        )
+          .then((responses) => {
+            responses.forEach((res) => {
+              assert.equal(res.status, 200, 'Response status should be 200'); // !!!
+              assert.equal(
+                res.type,
+                'application/json',
+                'Response type should be application/json',
+              );
+              assert.isObject(res.body, 'Response body should be an object');
+              assert.include(
+                res.body,
+                expectedResponse,
+                'Response should contain error property with "Invalid Length" message',
+              );
+            });
             done();
           })
           .catch((err) => done(err));
