@@ -1,5 +1,3 @@
-const puzzlesAndSolutions = require('./puzzle-strings');
-
 const rowCharToIndex = {
   A: 0,
   B: 1,
