@@ -5,6 +5,56 @@ const valInput = document.getElementById('val');
 const puzzleStrErr = document.getElementById('puzzle-str-err');
 const responseMsg = document.getElementById('response');
 
+// Function to clear all '.error' classes from sudoku grid inputs
+function removeGridErrors() {
+  document
+    .querySelectorAll('.sudoku-input')
+    .forEach((inputEl) => inputEl.classList.remove('error'));
+}
+
+// Function that checks the validity of input to the sudoku grid
+// Prevents invalid values being input
+// Checks if input move is valid vs row/col/region and marks as error if invalid
+function validateGridInput(event) {
+  event.target.classList.remove('error');
+
+  // If value is not valid, try to coerce input into valid value
+  if (
+    !['', '1', '2', '3', '4', '5', '6', '7', '8', '9'].includes(
+      event.target.value,
+    )
+  ) {
+    const lastChar = event.target.value[event.target.value.length - 1];
+    // Otherwise try to remove erroneous input
+    if (['', '1', '2', '3', '4', '5', '6', '7', '8', '9'].includes(lastChar)) {
+      event.target.value = lastChar;
+    } else {
+      // Otherwise remove an invalid character:
+      event.target.value = '';
+    }
+  }
+
+  // If the last move has put a value in the cell, check if move is valid:
+  if (event.target.value !== '') {
+    if (
+      !validClue(
+        textArea.value
+          .split('')
+          .map((val) => (val === '.' ? val : parseInt(val))),
+        parseInt(event.target.getAttribute('data-index')),
+        parseInt(event.target.value),
+      )
+    ) {
+      // Move is invalid, highlight in red
+      event.target.classList.add('error');
+    }
+  }
+
+  // Update puzzle String input and ensure grid matches
+  updatePuzzleString();
+  fillPuzzle(textArea.value);
+}
+
 // Function that updates puzzle string in text input
 // after typing numbers into sudoku grid
 function updatePuzzleString() {
@@ -18,7 +68,7 @@ function updatePuzzleString() {
 
 // Function that fills the sudoku grid based on the puzzle string
 function fillPuzzle(data) {
-  // Remove errors since this is only called in non-error state
+  // Remove textInput errors since this is only called in non-error state
   textArea.classList.remove('error');
   puzzleStrErr.innerHTML = '';
 
@@ -104,6 +154,7 @@ async function generateSudoku() {
   }
 
   const sudokuToSolve = solvedArr.join('');
+  removeGridErrors();
   fillPuzzle(sudokuToSolve);
   textArea.value = sudokuToSolve;
   document.querySelector('#random-sudoku-btn').disabled = false;
@@ -127,7 +178,7 @@ function validClue(puzzleArr, position, value) {
     if (
       puzzleArr[rowCheck] === value ||
       puzzleArr[colCheck] === value ||
-      puzzleArr[regionCheck === value]
+      puzzleArr[regionCheck] === value
     ) {
       return false;
     }
@@ -192,37 +243,11 @@ async function getChecked() {
   responseMsg.innerHTML = `<code>${JSON.stringify(parsed, null, 2)}</code>`;
 }
 
+// On DOM Content Loaded, set up on-click / on-input effects
 document.addEventListener('DOMContentLoaded', () => {
   // Set up updating puzzle string on input to sudoku grid:
   document.querySelectorAll('.sudoku-input').forEach((inputEl) => {
-    inputEl.addEventListener('keyup', (event) => {
-      event.target.classList.remove('error');
-
-      // If value is valid, update
-      if (
-        ['', '1', '2', '3', '4', '5', '6', '7', '8', '9'].includes(
-          event.target.value,
-        )
-      ) {
-        updatePuzzleString();
-        fillPuzzle(textArea.value);
-      }
-
-      const lastChar = event.target.value[event.target.value.length - 1];
-      // Otherwise try to remove erroneous input
-      if (
-        ['', '1', '2', '3', '4', '5', '6', '7', '8', '9'].includes(lastChar)
-      ) {
-        event.target.value = lastChar;
-        updatePuzzleString();
-        fillPuzzle(textArea.value);
-      } else {
-        console.log('whoops');
-        event.target.value = '';
-        updatePuzzleString();
-        fillPuzzle(textArea.value);
-      }
-    });
+    inputEl.addEventListener('keyup', validateGridInput);
   });
 
   // Set up on click random sudoku generation:
