@@ -183,14 +183,14 @@ td {
 
 /** Remove number arrows from sudoku input grid **/
 /* Chrome, Safari, Edge, Opera */
-input::-webkit-outer-spin-button.sudoku-input,
-input::-webkit-inner-spin-button.sudoku-input {
+input.sudoku-input::-webkit-outer-spin-button,
+input.sudoku-input::-webkit-inner-spin-button {
   -webkit-appearance: none;
   margin: 0;
 }
 
 /* Firefox */
-input[type='number'].sudoku-input {
+input.sudoku-input[type='number'] {
   -moz-appearance: textfield;
 }
 
